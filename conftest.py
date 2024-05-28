@@ -24,14 +24,26 @@ def browser(playwright, pytestconfig):
 
 @pytest.fixture
 def page(browser, request):
-    with browser.new_page() as page:
+    page = browser.new_page()
+    failed_before = False
+    try:
         yield page
-    # After the test: teardown code
-    if request.node.rep_call and request.node.rep_call.failed:
-            # Only take a screenshot if the test has failed
-            with allure.step("Taking a screenshot on failure"):
-                screenshot_bytes = page.screenshot(full_page=True)
-                allure.attach(screenshot_bytes, name="screenshot", attachment_type=AttachmentType.PNG)
+    except Exception as e:
+        # If an exception occurs, take a screenshot before closing the page
+        failed_before = True
+        with allure.step("Taking a screenshot on failure"):
+            screenshot_bytes = page.screenshot(full_page=True)
+            allure.attach(screenshot_bytes, name="screenshot", attachment_type=AttachmentType.PNG)
+        raise  # Re-raise the exception to not mask the test failure
+    finally:
+        # If the test has failed and no exception was raised within the test, take a screenshot here
+        if not failed_before:
+            rep_call = getattr(request.node, "rep_call", None)
+            if rep_call and rep_call.failed:
+                with allure.step("Taking a screenshot on failure"):
+                    screenshot_bytes = page.screenshot(full_page=True)
+                    allure.attach(screenshot_bytes, name="screenshot", attachment_type=AttachmentType.PNG)
+        page.close()
 
 @pytest.fixture(scope='session')
 def env(request):
@@ -44,7 +56,7 @@ def env(request):
 def open_page(page, url):
     try:
         page.goto(url, timeout=60000)  # Set a timeout of 60 seconds for navigation
-        page.set_viewport_size({"width": 2500, "height": 1440})
+        page.set_viewport_size({"width": 2560, "height": 1440})
         CloseCookies(page).close_cookies()  # Close the cookie banner after the page has loaded
     except Exception as e:
         print(f"Failed to navigate to the URL: {e}")
@@ -58,7 +70,10 @@ def pytest_runtest_makereport(item, call):
     report = outcome.get_result()
 
     # Set a report attribute for each phase of a call, which can be "setup", "call", or "teardown"
-    setattr(item, "rep_" + report.when, report)
+    if report.when == 'call':
+        setattr(item, "rep_call", report)
+
+    
 
 
     # pytest --alluredir=C:\Users\Dima\Desktop\Testing\Python_Playwright\ZegarowniaProject\allure_results

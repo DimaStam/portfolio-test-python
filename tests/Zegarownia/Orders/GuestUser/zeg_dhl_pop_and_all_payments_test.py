@@ -46,7 +46,7 @@ def checkout_summary_page(home_page, page: Page):
     expect(checkout_shipping_page.shipping_form).to_be_visible(timeout=20000)
 
     checkout_shipping_page.fill_shipping_form()
-    time.sleep(5)
+    time.sleep(1)
     checkout_shipping_page.select_delivery_method(DeliveryMethods.dhl_pop)
     checkout_shipping_page.select_dhl_pop_delivery_point()
 
@@ -62,11 +62,11 @@ def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryP
     payment_methods.select_payment_method(payment_method_name)
     checkout_summary_page.add_order_comment()
     checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.zeg_agreement_checkbox)
-    # time.sleep(5)
+    time.sleep(1)
     
-    # checkout_summary_page.place_order()
+    checkout_summary_page.place_order()
     
-    # expect(page).to_have_title(ZegarowniaPaymentMethods.expected_titles[payment_method_name])
+    expect(page).to_have_title(ZegarowniaPaymentMethods.expected_titles[payment_method_name])
 
 
 

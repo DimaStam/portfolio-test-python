@@ -1,7 +1,7 @@
 class PageTitles:
     # Payment pages
     PAYU_TITLE = "PayU"
-    CA_INSTALLMENTS = "Wniosek o kredyt - Bank Credit Agricole - Crédit Agricole"
+    CA_INSTALLMENTS = "Wniosek o kredyt  - Bank Credit Agricole - Crédit Agricole"
     PAYPAL_TITLE = "Zaloguj się do swojego konta PayPal"
     
     # Zegarownia

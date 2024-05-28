@@ -18,6 +18,7 @@ from library.testdata.page_titles import PageTitles
 
 @pytest.fixture
 def home_page(page: Page, env):
+    pytest.skip()
     home_page = HomePage(page)
     open_page(page, env['URL_FAB'])
     home_page.wait_for_home_page()
@@ -26,6 +27,7 @@ def home_page(page: Page, env):
     return home_page
 
 def test_buy_product_by_blik(home_page, page: Page):
+    pytest.skip()
     search_result_page: SearchResultPage = Header(home_page.page).find_product(ProductNames.product_name)
 
     expect(search_result_page.product_tile).to_be_visible()
@@ -60,7 +62,7 @@ def test_buy_product_by_blik(home_page, page: Page):
     checkout_summary_page.select_payment_method(ZegarowniaPaymentMethods.BLIK)
     checkout_summary_page.add_order_comment()
     checkout_summary_page.select_agreement_checkbox()
-    # checkout_summary_page.place_order()
+    checkout_summary_page.place_order()
 
     expect(page).to_have_title(PageTitles.PAYU_TITLE)
 

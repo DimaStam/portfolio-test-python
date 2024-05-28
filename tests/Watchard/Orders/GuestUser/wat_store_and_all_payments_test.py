@@ -61,10 +61,10 @@ def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryP
     
     checkout_summary_page.add_order_comment()
     checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.watchard_agreement_checkbox)
-    # time.sleep(5)
-    # checkout_summary_page.place_order()
+    time.sleep(1)
+    checkout_summary_page.place_order()
     
-    # expect(page).to_have_title(ZegarowniaPaymentMethods.expected_titles[payment_method_name])
+    expect(page).to_have_title(WatchardPaymentMethods.expected_titles[payment_method_name])
 
 
 

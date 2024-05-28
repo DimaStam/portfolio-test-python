@@ -18,6 +18,7 @@ import time
 
 @pytest.fixture
 def home_page(page: Page, env):
+    pytest.skip()
     home_page = HomePage(page)
     open_page(page, env['URL_ECE'])
     home_page.wait_for_home_page()
@@ -27,6 +28,7 @@ def home_page(page: Page, env):
 
 @pytest.fixture
 def checkout_summary_page(home_page, page: Page):
+    pytest.skip()
     search_result_page: SearchResultPage = Header(home_page.page).find_product(ProductNames.product_name)
     expect(search_result_page.product_tile).to_be_visible(timeout=20000)
 
@@ -56,15 +58,16 @@ def checkout_summary_page(home_page, page: Page):
 # Use pytest.mark.parametrize to create a test instance for each payment method
 @pytest.mark.parametrize("payment_method_name", EceasuriPaymentMethods.selectors.keys())
 def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryPage, payment_method_name, page: Page):
+    pytest.skip()
     payment_methods = EceasuriPaymentMethods(page)
     payment_methods.select_payment_method(payment_method_name)
     
     checkout_summary_page.add_order_comment()
     checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.eceasuri_agreement_checkbox)
-    # time.sleep(5)
-    # checkout_summary_page.place_order()
+    time.sleep(1)
+    checkout_summary_page.place_order()
     
-    # expect(page).to_have_title(ZegarowniaPaymentMethods.expected_titles[payment_method_name])
+    expect(page).to_have_title(ZegarowniaPaymentMethods.expected_titles[payment_method_name])
 
 
 

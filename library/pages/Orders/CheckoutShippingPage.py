@@ -102,6 +102,7 @@ class CheckoutShippingPage:
 
     @allure.step("Proceed tu summary page")
     def proceed_to_summary(self) -> CheckoutSummaryPage:
+        self.page.wait_for_load_state('networkidle')
         self.proceed_to_summary_button.click()
         return CheckoutSummaryPage(self.page)
         
