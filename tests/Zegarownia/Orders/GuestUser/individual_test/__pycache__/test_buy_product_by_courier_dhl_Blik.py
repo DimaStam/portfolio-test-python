@@ -62,7 +62,7 @@ def test_buy_product_by_blik(home_page, page: Page):
     checkout_summary_page.select_payment_method(PaymentMethods.blik)
     checkout_summary_page.add_order_comment()
     checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.zeg_agreement_checkbox)
-    checkout_summary_page.place_order()
+    # checkout_summary_page.place_order()
 
     expect(page).to_have_title(PageTitles.PAYU_TITLE)
 

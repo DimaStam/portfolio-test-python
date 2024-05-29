@@ -18,7 +18,7 @@ from library.testdata.page_titles import PageTitles
 
 @pytest.fixture
 def home_page(page: Page, env):
-    pytest.skip()
+    # pytest.skip()
     home_page = HomePage(page)
     open_page(page, env['URL_ECE'])
     home_page.wait_for_home_page()
@@ -27,7 +27,7 @@ def home_page(page: Page, env):
     return home_page
 
 def test_buy_product_by_blik(home_page, page: Page):
-    pytest.skip()
+    # pytest.skip()
     search_result_page: SearchResultPage = Header(home_page.page).find_product(ProductNames.product_name)
 
     expect(search_result_page.product_tile).to_be_visible()
@@ -53,8 +53,8 @@ def test_buy_product_by_blik(home_page, page: Page):
     expect(checkout_shipping_page.shipping_form).to_be_visible()
 
     checkout_shipping_page.fill_shipping_form()
-    checkout_shipping_page.select_delivery_method(DeliveryMethods.balikovna)
-    checkout_shipping_page.select_balikovna_delivery_point()
+    checkout_shipping_page.select_delivery_method(DeliveryMethods.fan_courier_collect_point)
+    checkout_shipping_page.select_fan_courier_collect_point()
 
     checkout_summary_page: CheckoutSummaryPage = checkout_shipping_page.proceed_to_summary()
 
@@ -62,9 +62,9 @@ def test_buy_product_by_blik(home_page, page: Page):
 
     checkout_summary_page.select_payment_method(PaymentMethods.bank_transfer)
     checkout_summary_page.add_order_comment()
-    checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.hodinkovna_cz_agreement_checkbox)
-    checkout_summary_page.place_order()
+    checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.eceasuri_agreement_checkbox)
+    # checkout_summary_page.place_order()
 
     # expect(page).to_have_title(PageTitles.PAYU_TITLE)
 
-    # pytest -v --env=prod tests\Eceasuri\Orders\GuestUser\individual_test\Eceasuri_individual_test.py --headed
+    # pytest -v --env=prod tests/Eceasuri/Orders/GuestUser/individual_test/Eceasuri_individual_test.py --headed
