@@ -76,5 +76,5 @@ def pytest_runtest_makereport(item, call):
     
 
 
-    # pytest --alluredir=C:\Users\Dima\Desktop\Testing\Python_Playwright\ZegarowniaProject\allure_results
-    # allure serve C:\Users\Dima\Desktop\Testing\Python_Playwright\ZegarowniaProject\allure_results
+    # pytest --alluredir=/Users/global/Desktop/Zegarownia/allure_results
+    # allure serve /Users/global/Desktop/Zegarownia/allure_results

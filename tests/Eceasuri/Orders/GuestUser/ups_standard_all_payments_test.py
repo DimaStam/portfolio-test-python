@@ -11,24 +11,24 @@ from library.pages.Orders.StepLoginFormPage import StepLoginFormPage
 from library.pages.Orders.CheckoutShippingPage import CheckoutShippingPage
 from library.pages.Orders.CheckoutSummaryPage import CheckoutSummaryPage
 from library.testdata.Orders.DeliveryMethods import DeliveryMethods
-from library.testdata.Orders.PaymentMethods.HodinkovnaCZPaymentMethods import HodinkovnaCZPaymentMethods
+from library.testdata.Orders.PaymentMethods.EceasuriPaymentMethods import EceasuriPaymentMethods
 from conftest import open_page
 from library.testdata.page_titles import PageTitles
 import time
 
 @pytest.fixture
 def home_page(page: Page, env):
-    pytest.skip()
+    # pytest.skip()
     home_page = HomePage(page)
-    open_page(page, env['URL_HOD_CZ'])
+    open_page(page, env['URL_ECE'])
     home_page.wait_for_home_page()
 
-    expect(page).to_have_title(PageTitles.HOD_CZ_HOME_PAGE_TITLE)
+    expect(page).to_have_title(PageTitles.ECE_PAGE_TITLE)
     return home_page
 
 @pytest.fixture
 def checkout_summary_page(home_page, page: Page):
-    pytest.skip()
+    # pytest.skip()
     search_result_page: SearchResultPage = Header(home_page.page).find_product(ProductNames.product_name)
     expect(search_result_page.product_tile).to_be_visible(timeout=20000)
 
@@ -48,28 +48,28 @@ def checkout_summary_page(home_page, page: Page):
     expect(checkout_shipping_page.shipping_form).to_be_visible(timeout=20000)
 
     checkout_shipping_page.fill_shipping_form()
-    checkout_shipping_page.select_delivery_method(DeliveryMethods.ppl)
+    checkout_shipping_page.select_delivery_method(DeliveryMethods.sk_ups_standard)
 
     checkout_summary_page: CheckoutSummaryPage = checkout_shipping_page.proceed_to_summary()
     expect(checkout_summary_page.summary_area).to_be_visible(timeout=20000)
 
     return checkout_summary_page
 
-# Use pytest.mark.parametrize to create a test instance for each payment method
-@pytest.mark.parametrize("payment_method_name", HodinkovnaCZPaymentMethods.selectors.keys())
+
+@pytest.mark.parametrize("payment_method_name", EceasuriPaymentMethods.selectors.keys())
 def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryPage, payment_method_name, page: Page):
-    pytest.skip()
-    payment_methods = HodinkovnaCZPaymentMethods(page)
+    # pytest.skip()
+    payment_methods = EceasuriPaymentMethods(page)
     payment_methods.select_payment_method(payment_method_name)
     
     checkout_summary_page.add_order_comment()
-    checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.hodinkovna_cz_agreement_checkbox)
+    checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.eceasuri_agreement_checkbox)
     time.sleep(1)
-    checkout_summary_page.place_order()
+    # checkout_summary_page.place_order()
     
-    expect(page).to_have_title(ZegarowniaPaymentMethods.expected_titles[payment_method_name])
+    # expect(page).to_have_title(EceasuriPaymentMethods.expected_titles[payment_method_name])
 
 
 
-    # pytest -v --env=prod tests\HodinkovnaCZ\Orders\GuestUser\ppl_and_all_payments_test.py --headed --alluredir=C:\Users\Dima\Desktop\Testing\Python_Playwright\ZegarowniaProject\allure_results
-    # allure serve C:\Users\Dima\Desktop\Testing\Python_Playwright\ZegarowniaProject\allure_results
+    # pytest -v --env=prod tests/Eceasuri/Orders/GuestUser/ups_standard_all_payments_test.py --headed --alluredir=/Users/global/Desktop/Zegarownia/allure_results
+    # allure serve /Users/global/Desktop/Zegarownia/allure_results

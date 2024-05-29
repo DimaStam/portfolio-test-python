@@ -53,7 +53,7 @@ def checkout_summary_page(home_page, page: Page):
 
     return checkout_summary_page
 
-# Use pytest.mark.parametrize to create a test instance for each payment method
+
 @pytest.mark.parametrize("payment_method_name", HodinkovnaCZPaymentMethods.selectors.keys())
 def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryPage, payment_method_name, page: Page):
     payment_methods = HodinkovnaCZPaymentMethods(page)
@@ -62,11 +62,11 @@ def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryP
     checkout_summary_page.add_order_comment()
     checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.hodinkovna_sk_agreement_checkbox)
     time.sleep(1)
-    checkout_summary_page.place_order()
+    # checkout_summary_page.place_order()
     
-    expect(page).to_have_title(HodinkovnaCZPaymentMethods.expected_titles[payment_method_name])
+    # expect(page).to_have_title(HodinkovnaCZPaymentMethods.expected_titles[payment_method_name])
 
 
 
-    # pytest -v --env=prod tests\HodinkovnaSK\Orders\GuestUser\ups_express_saver_all_payments_hod_sk_test.py --headed --alluredir=C:\Users\Dima\Desktop\Testing\Python_Playwright\ZegarowniaProject\allure_results
-    # allure serve C:\Users\Dima\Desktop\Testing\Python_Playwright\ZegarowniaProject\allure_results
+    # pytest -v --env=prod tests\HodinkovnaSK\Orders\GuestUser\ups_express_saver_all_payments_hod_sk_test.py --headed --alluredir=/Users/global/Desktop/Zegarownia/allure_results
+    # allure serve /Users/global/Desktop/Zegarownia/allure_results

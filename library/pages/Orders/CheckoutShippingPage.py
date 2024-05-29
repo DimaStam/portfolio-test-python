@@ -8,6 +8,7 @@ from library.Modules.Orders.DeliveryMethods.BalikovnaPoints import BalikovnaPoin
 from library.Modules.Orders.DeliveryMethods.BalikNaPostuPoints import BalikNaPostuPoints
 from library.Modules.Orders.DeliveryMethods.BalikoboxPoints import BalikoboxPoints
 from library.Modules.Orders.DeliveryMethods.SpsParcelshopPoints import SpsParcelshopPoints
+from library.Modules.Orders.DeliveryMethods.FanCourierCollectPoint import FanCourierCollectPoints
 import time
 
 class CheckoutShippingPage:
@@ -29,6 +30,7 @@ class CheckoutShippingPage:
         self.balik_na_postu_points = BalikNaPostuPoints(page)
         self.balikobox_points = BalikoboxPoints(page)
         self.sps_parcelshop_points = SpsParcelshopPoints(page)
+        self.fan_courier_delivery_points = FanCourierCollectPoints(page)
         self.dhl_select_point_button = page.locator("//button[@id='dhllink']")
         self.shipping_methods_loader = page.locator("//li[@id='opc-shipping_method']//div[@class='loading-mask']")
         self.shipping_form = page.locator("//li[@class='checkout-shipping-address']")
@@ -99,6 +101,11 @@ class CheckoutShippingPage:
     def select_sps_parcelshop_delivery_point(self):
         self.sps_parcelshop_points.wait_for_balik_na_postu_points_map()
         self.sps_parcelshop_points.enter_delivery_point("Plynárenská 7a, Ružinov, Slovensko")
+
+    @allure.step("Select Fan Courier Collect Point")
+    def select_fan_courier_collect_point(self):
+        self.fan_courier_delivery_points.wait_for_fan_courier_collect_points_map()
+        self.fan_courier_delivery_points.enter_delivery_point("Strada Ferdinand nr. 38A, Râmnicu Vâlcea, România")
 
     @allure.step("Proceed tu summary page")
     def proceed_to_summary(self) -> CheckoutSummaryPage:
