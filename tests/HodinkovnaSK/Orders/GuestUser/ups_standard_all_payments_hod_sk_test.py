@@ -11,7 +11,7 @@ from library.pages.Orders.StepLoginFormPage import StepLoginFormPage
 from library.pages.Orders.CheckoutShippingPage import CheckoutShippingPage
 from library.pages.Orders.CheckoutSummaryPage import CheckoutSummaryPage
 from library.testdata.Orders.DeliveryMethods import DeliveryMethods
-from library.testdata.Orders.PaymentMethods.WatchardPaymentMethods import WatchardPaymentMethods
+from library.testdata.Orders.PaymentMethods.HodinkovnaCZPaymentMethods import HodinkovnaCZPaymentMethods
 from conftest import open_page
 from library.testdata.page_titles import PageTitles
 import time
@@ -19,10 +19,10 @@ import time
 @pytest.fixture
 def home_page(page: Page, env):
     home_page = HomePage(page)
-    open_page(page, env['URL_WAT'])
+    open_page(page, env['URL_HOD_SK'])
     home_page.wait_for_home_page()
 
-    expect(page).to_have_title(PageTitles.WAT_HOME_PAGE_TITLE)
+    expect(page).to_have_title(PageTitles.HOD_SK_PAGE_TITLE)
     return home_page
 
 @pytest.fixture
@@ -46,7 +46,7 @@ def checkout_summary_page(home_page, page: Page):
     expect(checkout_shipping_page.shipping_form).to_be_visible(timeout=20000)
 
     checkout_shipping_page.fill_shipping_form()
-    checkout_shipping_page.select_delivery_method(DeliveryMethods.fre_shipping_zeg_point)
+    checkout_shipping_page.select_delivery_method(DeliveryMethods.sk_ups_standard)
 
     checkout_summary_page: CheckoutSummaryPage = checkout_shipping_page.proceed_to_summary()
     expect(checkout_summary_page.summary_area).to_be_visible(timeout=20000)
@@ -54,19 +54,19 @@ def checkout_summary_page(home_page, page: Page):
     return checkout_summary_page
 
 
-@pytest.mark.parametrize("payment_method_name", WatchardPaymentMethods.selectors.keys())
+@pytest.mark.parametrize("payment_method_name", HodinkovnaCZPaymentMethods.selectors.keys())
 def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryPage, payment_method_name, page: Page):
-    payment_methods = WatchardPaymentMethods(page)
+    payment_methods = HodinkovnaCZPaymentMethods(page)
     payment_methods.select_payment_method(payment_method_name)
     
     checkout_summary_page.add_order_comment()
-    checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.watchard_agreement_checkbox)
+    checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.hodinkovna_sk_agreement_checkbox)
     time.sleep(1)
     checkout_summary_page.place_order()
     
-    expect(page).to_have_title(WatchardPaymentMethods.expected_titles[payment_method_name])
+    expect(page).to_have_title(HodinkovnaCZPaymentMethods.expected_titles[payment_method_name])
 
 
 
-    # pytest -v --env=prod tests\Watchard\Orders\GuestUser\wat_store_and_all_payments_test.py --headed --alluredir=/Users/global/Desktop/Zegarownia/allure_results
+    # pytest -v --env=prod tests\HodinkovnaSK\Orders\GuestUser\ups_standard_all_payments_test.py --headed --alluredir=/Users/global/Desktop/Zegarownia/allure_results
     # allure serve /Users/global/Desktop/Zegarownia/allure_results

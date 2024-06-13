@@ -56,7 +56,7 @@ def env(request):
 def open_page(page, url):
     try:
         page.goto(url, timeout=60000)  # Set a timeout of 60 seconds for navigation
-        page.set_viewport_size({"width": 2560, "height": 1440})
+        page.set_viewport_size({"width": 1350, "height": 870})
         CloseCookies(page).close_cookies()  # Close the cookie banner after the page has loaded
     except Exception as e:
         print(f"Failed to navigate to the URL: {e}")

@@ -23,7 +23,7 @@ def home_page(page: Page, env):
     open_page(page, env['URL_ECE'])
     home_page.wait_for_home_page()
 
-    expect(page).to_have_title(PageTitles.ECE_PAGE_TITLE)
+    expect(page).to_have_title(PageTitles.EOR_PAGE_TITLE)
     return home_page
 
 @pytest.fixture
@@ -65,9 +65,9 @@ def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryP
     checkout_summary_page.add_order_comment()
     checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.eceasuri_agreement_checkbox)
     time.sleep(1)
-    # checkout_summary_page.place_order()
+    checkout_summary_page.place_order()
     
-    # expect(page).to_have_title(EceasuriPaymentMethods.expected_titles[payment_method_name])
+    expect(page).to_have_title(EceasuriPaymentMethods.expected_titles[payment_method_name])
 
 
 

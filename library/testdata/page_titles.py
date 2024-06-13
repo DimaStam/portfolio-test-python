@@ -26,3 +26,6 @@ class PageTitles:
 
     # Eceasuri
     ECE_PAGE_TITLE = "1. Ceasuri - Magazin cu ceasuri - Ceasuri de mână • e-Ceasuri"
+
+    # Eorak
+    EOR_PAGE_TITLE = "1. Órák - Áruház órákkal - Karórák - Karórák • e-Órák"
