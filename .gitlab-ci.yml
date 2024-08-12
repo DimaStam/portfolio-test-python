@@ -1,5 +1,6 @@
 stages:
   - install
+  - Send-report
   - Zegarownia
 
 variables:
@@ -16,12 +17,6 @@ before_script:
   - python -m venv venv
   - source venv/bin/activate
   - pip install -r requirements.txt
-
-install-dependencies:
-  stage: install
-  script:
-    - pip install pytest playwright
-    - playwright install
 
 default:
   image: mcr.microsoft.com/playwright/python:v1.44.0-jammy
@@ -42,9 +37,26 @@ default:
       when: manual
   allow_failure: true
 
+install-dependencies:
+  stage: install
+  script:
+    - pip install pytest playwright
+    - playwright install
+
 Zegarownia-orders:
   extends: .pipeline-branch-model
   stage: Zegarownia
   script:
     - source venv/bin/activate
     - pytest tests/Fabrykazegarkow/Orders/GuestUser/individual_test/test_buy_product_by_courier_dhl_Blik.py --env=stage --alluredir=allure_results
+
+Submit-finished-report:
+  extends: .pipeline-branch-model
+  stage: Send-report
+  before_script:
+    - date
+    - apt-get update && apt-get install -y wget jq
+  needs:
+    - Zegarownia-orders
+  script:
+    - ./allure-server/allure-push.sh ${CI_PIPELINE_ID}
