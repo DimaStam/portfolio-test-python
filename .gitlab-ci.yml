@@ -47,4 +47,4 @@ Zegarownia-orders:
   stage: Zegarownia
   script:
     - source venv/bin/activate
-    - pytest tests/Zegarownia/Orders/GuestUser --env=stage --alluredir=/Users/global/Desktop/Zegarownia/allure_results
+    - pytest tests/Fabrykazegarkow/Orders/GuestUser/individual_test/test_buy_product_by_courier_dhl_Blik.py --env=stage --alluredir=allure_results

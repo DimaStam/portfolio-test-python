@@ -65,7 +65,7 @@ def page(browser, request):
 def take_screenshot(page, test_name):
     # Replace invalid characters for filenames
     filename = test_name.replace("/", "_").replace(":", "_").replace("[", "_").replace("]", "_") + ".png"
-    screenshot_path = f'screenshots/{filename}'
+    screenshot_path = f'allure_results/{filename}'
     page.screenshot(path=screenshot_path, full_page=True)
     with allure.step("Taking a screenshot on failure"):
         with open(screenshot_path, "rb") as image_file:

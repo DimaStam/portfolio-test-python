@@ -17,7 +17,7 @@ class ZegarowniaPaymentMethods:
 
     # Map payment method names to their respective XPath selectors
     selectors = {
-        BLIK: "//div[@class='row align-items-center payment-method _active']",
+        BLIK: "//div[@class='row align-items-center payment-method _active']//div[@class='col-auto col-method-input']",
         PAYU: "//div[@class='tr payment-method payu-payment']//label[@for='payu_gateway']",
         BANK_TRANSFER: "//div[@class='tr']//label[@for='banktransfer']",
         CASH_ON_DELIVERY: "//div[@class='tr']//label[@for='cashondelivery']",
