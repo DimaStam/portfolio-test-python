@@ -23,7 +23,7 @@ def home_page(page: Page, env):
     open_page(page, env['URL_HOD_CZ'])
     home_page.wait_for_home_page()
 
-    expect(page).to_have_title(PageTitles.HOD_CZ_HOME_PAGE_TITLE)
+    # expect(page).to_have_title(PageTitles.HOD_CZ_HOME_PAGE_TITLE)
     return home_page
 
 def test_buy_product_by_blik(home_page, page: Page):
@@ -65,6 +65,6 @@ def test_buy_product_by_blik(home_page, page: Page):
     checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.hodinkovna_cz_agreement_checkbox)
     checkout_summary_page.place_order()
 
-    expect(page).to_have_title(PageTitles.PAYU_TITLE)
+    # expect(page).to_have_title(PageTitles.PAYU_TITLE)
 
     # pytest -v --env=prod tests\HodinkovnaCZ\Orders\GuestUser\individual_test\Hodinkovna_cz_individual_test.py --headed

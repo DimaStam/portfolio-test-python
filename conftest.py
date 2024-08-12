@@ -22,6 +22,29 @@ def browser(playwright, pytestconfig):
     yield browser
     browser.close()
 
+# @pytest.fixture
+# def page(browser, request):
+#     page = browser.new_page()
+#     failed_before = False
+#     try:
+#         yield page
+#     except Exception as e:
+#         # If an exception occurs, take a screenshot before closing the page
+#         failed_before = True
+#         with allure.step("Taking a screenshot on failure"):
+#             screenshot_bytes = page.screenshot(full_page=True)
+#             allure.attach(screenshot_bytes, name="screenshot", attachment_type=AttachmentType.PNG)
+#         raise  # Re-raise the exception to not mask the test failure
+#     finally:
+#         # If the test has failed and no exception was raised within the test, take a screenshot here
+#         if not failed_before:
+#             rep_call = getattr(request.node, "rep_call", None)
+#             if rep_call and rep_call.failed:
+#                 with allure.step("Taking a screenshot on failure"):
+#                     screenshot_bytes = page.screenshot(full_page=True)
+#                     allure.attach(screenshot_bytes, name="screenshot", attachment_type=AttachmentType.PNG)
+#         page.close()
+
 @pytest.fixture
 def page(browser, request):
     page = browser.new_page()
@@ -29,21 +52,24 @@ def page(browser, request):
     try:
         yield page
     except Exception as e:
-        # If an exception occurs, take a screenshot before closing the page
         failed_before = True
-        with allure.step("Taking a screenshot on failure"):
-            screenshot_bytes = page.screenshot(full_page=True)
-            allure.attach(screenshot_bytes, name="screenshot", attachment_type=AttachmentType.PNG)
-        raise  # Re-raise the exception to not mask the test failure
+        take_screenshot(page, request.node.nodeid)
+        raise
     finally:
-        # If the test has failed and no exception was raised within the test, take a screenshot here
         if not failed_before:
             rep_call = getattr(request.node, "rep_call", None)
             if rep_call and rep_call.failed:
-                with allure.step("Taking a screenshot on failure"):
-                    screenshot_bytes = page.screenshot(full_page=True)
-                    allure.attach(screenshot_bytes, name="screenshot", attachment_type=AttachmentType.PNG)
+                take_screenshot(page, request.node.nodeid)
         page.close()
+
+def take_screenshot(page, test_name):
+    # Replace invalid characters for filenames
+    filename = test_name.replace("/", "_").replace(":", "_").replace("[", "_").replace("]", "_") + ".png"
+    screenshot_path = f'screenshots/{filename}'
+    page.screenshot(path=screenshot_path, full_page=True)
+    with allure.step("Taking a screenshot on failure"):
+        with open(screenshot_path, "rb") as image_file:
+            allure.attach(image_file.read(), name="screenshot", attachment_type=AttachmentType.PNG)
 
 @pytest.fixture(scope='session')
 def env(request):
@@ -55,9 +81,9 @@ def env(request):
 @allure.step("Opening page at {url}")
 def open_page(page, url):
     try:
-        page.goto(url, timeout=60000)  # Set a timeout of 60 seconds for navigation
-        page.set_viewport_size({"width": 1350, "height": 870})
-        CloseCookies(page).close_cookies()  # Close the cookie banner after the page has loaded
+        page.goto(url, timeout=60000)
+        page.set_viewport_size({"width": 1340, "height": 870})
+        # CloseCookies(page).close_cookies()
     except Exception as e:
         print(f"Failed to navigate to the URL: {e}")
         allure.attach(str(e), name='Navigation error', attachment_type=AttachmentType.TEXT)
