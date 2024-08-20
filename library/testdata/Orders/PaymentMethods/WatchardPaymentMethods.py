@@ -10,7 +10,7 @@ class WatchardPaymentMethods:
 
     # Map payment method names to their respective XPath selectors
     selectors = {
-        PAYU: "//div[@class='tr payment-method payu-payment _active']//label[@for='payu_gateway']",
+        PAYU: "//div[@class='col-auto col-method-input']/following-sibling::div[@class='col-auto col-method-photo']//span[@class='photo-method photo-method--payu_gateway']",
         BANK_TRANSFER: "//div[@class='tr']//label[@for='banktransfer']",
         CARD: "//div[@class='payment-method payu-payment']//label[@for='payu_gateway_card']",
         PAY_PAL: "//div[@class='tr']//label[@for='paypal_express']",

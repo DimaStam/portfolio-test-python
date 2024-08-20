@@ -63,7 +63,6 @@ def page(browser, request):
         page.close()
 
 def take_screenshot(page, test_name):
-    # Replace invalid characters for filenames
     filename = test_name.replace("/", "_").replace(":", "_").replace("[", "_").replace("]", "_") + ".png"
     screenshot_path = f'screenshots/{filename}'
     page.screenshot(path=screenshot_path, full_page=True)
@@ -82,8 +81,8 @@ def env(request):
 def open_page(page, url):
     try:
         page.goto(url, timeout=60000)
-        page.set_viewport_size({"width": 1340, "height": 870})
-        # CloseCookies(page).close_cookies()
+        page.set_viewport_size({"width": 1700, "height": 900})
+        CloseCookies(page).close_cookies()
     except Exception as e:
         print(f"Failed to navigate to the URL: {e}")
         allure.attach(str(e), name='Navigation error', attachment_type=AttachmentType.TEXT)

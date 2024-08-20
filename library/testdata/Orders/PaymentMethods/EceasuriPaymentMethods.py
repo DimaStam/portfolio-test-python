@@ -10,7 +10,7 @@ class EceasuriPaymentMethods:
 
     # Map payment method names to their respective XPath selectors
     selectors = {
-        PAYU: "//div[@class='row align-items-center payment-method']//label[@for='payu_gateway']",
+        PAYU: "//div[@class='col-auto col-method-input']/following-sibling::div[@class='col-auto col-method-photo']//span[@class='photo-method photo-method--payu_gateway']",
         BANK_TRANSFER: "//div[@class='tr']//label[@for='banktransfer']",
         CASH_ON_DELIVERY: "//div[@class='tr']//label[@for='cashondelivery']",
         CARD: "//div[@class='payment-method payu-payment']//label[@for='payu_gateway_card']",

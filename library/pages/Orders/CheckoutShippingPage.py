@@ -9,6 +9,7 @@ from library.Modules.Orders.DeliveryMethods.BalikNaPostuPoints import BalikNaPos
 from library.Modules.Orders.DeliveryMethods.BalikoboxPoints import BalikoboxPoints
 from library.Modules.Orders.DeliveryMethods.SpsParcelshopPoints import SpsParcelshopPoints
 from library.Modules.Orders.DeliveryMethods.FanCourierCollectPoint import FanCourierCollectPoints
+from library.Modules.Orders.DeliveryMethods.MagyarDeliveryPoints import MagyarPoints
 import time
 
 class CheckoutShippingPage:
@@ -31,6 +32,7 @@ class CheckoutShippingPage:
         self.balikobox_points = BalikoboxPoints(page)
         self.sps_parcelshop_points = SpsParcelshopPoints(page)
         self.fan_courier_delivery_points = FanCourierCollectPoints(page)
+        self.magyar_delivery_points = MagyarPoints(page)
         self.dhl_select_point_button = page.locator("//button[@id='dhllink']")
         self.shipping_methods_loader = page.locator("//li[@id='opc-shipping_method']//div[@class='loading-mask']")
         self.shipping_form = page.locator("//li[@class='checkout-shipping-address']")
@@ -106,6 +108,11 @@ class CheckoutShippingPage:
     def select_fan_courier_collect_point(self):
         self.fan_courier_delivery_points.wait_for_fan_courier_collect_points_map()
         self.fan_courier_delivery_points.enter_delivery_point("Strada Ferdinand nr. 38A, Râmnicu Vâlcea, România")
+
+    @allure.step("Select Magyar Csomagautomata delivery Point")
+    def select_magyar_delivery_point(self):
+        self.magyar_delivery_points.wait_for_fan_courier_collect_points_map()
+        self.magyar_delivery_points.enter_delivery_point("Nagyiván Hősök tere 5 5363 Magyarország")
 
     @allure.step("Proceed tu summary page")
     def proceed_to_summary(self) -> CheckoutSummaryPage:

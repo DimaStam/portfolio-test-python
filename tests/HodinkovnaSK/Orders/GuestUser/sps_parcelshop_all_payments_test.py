@@ -1,10 +1,8 @@
 import pytest
 from playwright.sync_api import Page, expect
-from library.pages.common.HomePage import HomePage
-from library.pages.Orders.SearchResultPage import SearchResultPage
-from library.pages.common.Header import Header
+
 from library.pages.common.ProductPage import ProductPage
-from library.testdata.Orders.ProductNames import ProductNames
+
 from library.pages.Orders.ExtraoptionsPage import ExtraoptionsPage
 from library.pages.Orders.CheckoutCartPage import CheckoutCartPage
 from library.pages.Orders.StepLoginFormPage import StepLoginFormPage
@@ -63,11 +61,14 @@ def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryP
     pytest.skip()
     payment_methods = HodinkovnaCZPaymentMethods(page)
     payment_methods.select_payment_method(payment_method_name)
+    if payment_method_name == HodinkovnaCZPaymentMethods.CARD:
+        submit_button_locator = checkout_summary_page.card_submit_button_hodinkovna_sk
+        checkout_summary_page.fill_card_fields(submit_button_locator)
     
     checkout_summary_page.add_order_comment()
     checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.hodinkovna_sk_agreement_checkbox)
     time.sleep(1)
-    checkout_summary_page.place_order()
+    # checkout_summary_page.place_order()
     
     # expect(page).to_have_title(HodinkovnaCZPaymentMethods.expected_titles[payment_method_name])
 

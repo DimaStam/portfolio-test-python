@@ -1,10 +1,8 @@
 import pytest
 from playwright.sync_api import Page, expect
-from library.pages.common.HomePage import HomePage
-from library.pages.Orders.SearchResultPage import SearchResultPage
-from library.pages.common.Header import Header
+
 from library.pages.common.ProductPage import ProductPage
-from library.testdata.Orders.ProductNames import ProductNames
+
 from library.pages.Orders.ExtraoptionsPage import ExtraoptionsPage
 from library.pages.Orders.CheckoutCartPage import CheckoutCartPage
 from library.pages.Orders.StepLoginFormPage import StepLoginFormPage
@@ -17,20 +15,10 @@ from library.testdata.page_titles import PageTitles
 import time
 
 @pytest.fixture
-def home_page(page: Page, env):
-    home_page = HomePage(page)
-    open_page(page, env['URL_ZEG'])
-    home_page.wait_for_home_page()
+def checkout_summary_page(page: Page, env):
 
-    # expect(page).to_have_title(PageTitles.ZEG_HOME_PAGE_TITLE)
-    return home_page
-
-@pytest.fixture
-def checkout_summary_page(home_page, page: Page):
-    search_result_page: SearchResultPage = Header(home_page.page).find_product(ProductNames.product_name)
-    expect(search_result_page.product_tile).to_be_visible(timeout=20000)
-
-    product_page: ProductPage = search_result_page.select_product()
+    open_page(page, env['URL_ZEG_PRODUCT'])
+    product_page = ProductPage(page)
     expect(product_page.product_description_area).to_be_visible(timeout=20000)
 
     extraoptions_page: ExtraoptionsPage = product_page.add_product_to_the_cart()
@@ -60,11 +48,15 @@ def checkout_summary_page(home_page, page: Page):
 def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryPage, payment_method_name, page: Page):
     payment_methods = ZegarowniaPaymentMethods(page)
     payment_methods.select_payment_method(payment_method_name)
+    if payment_method_name == ZegarowniaPaymentMethods.CARD:
+        submit_button_locator = checkout_summary_page.card_submit_button_zegarownia
+        checkout_summary_page.fill_card_fields(submit_button_locator)
+
     checkout_summary_page.add_order_comment()
     checkout_summary_page.select_agreement_checkbox(CheckoutSummaryPage.zeg_agreement_checkbox)
     time.sleep(1)
     
-    checkout_summary_page.place_order()
+    # checkout_summary_page.place_order()
     
     # expect(page).to_have_title(ZegarowniaPaymentMethods.expected_titles[payment_method_name])
 

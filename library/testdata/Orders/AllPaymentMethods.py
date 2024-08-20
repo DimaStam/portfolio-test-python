@@ -14,6 +14,8 @@ class PaymentMethods:
     card = "//div[@class='payment-method payu-payment']//label[@for='payu_gateway_card']"
     pay_pal = "//div[@class='tr']//label[@for='paypal_express']"
 
+    eorak_card = "//div[@class='payment-method payu-payment _active']//label[@for='payu_gateway_card']"
+
     def __init__(self, page: Page):
         self.page = page
         

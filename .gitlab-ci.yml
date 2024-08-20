@@ -1,6 +1,12 @@
 stages:
   - install
   - Zegarownia
+  - Fabryka
+  - Watchard
+  - Hodinkovna-CZ
+  - Hodinkovna-SK
+  - Eceasuri
+  - Eorak
   - Send-report
 
 variables:
@@ -27,7 +33,7 @@ default:
     expire_in: 3 DAYS
     paths:
       - screenshots/
-      - target/allure-results/
+      - /allure-results
 
 .pipeline-branch-model:
   rules:
@@ -48,7 +54,42 @@ Zegarownia-orders:
   stage: Zegarownia
   script:
     - source venv/bin/activate
-    - pytest tests/Fabrykazegarkow/Orders/GuestUser/individual_test/test_buy_product_by_courier_dhl_Blik.py --env=stage --alluredir=allure_results
+    - pytest tests/Zegarownia/Orders/GuestUser/ --env=prod --alluredir=allure_results
+
+Fabryka-orders:
+  extends: .pipeline-branch-model
+  stage: Fabryka
+  script:
+    - source venv/bin/activate
+    - pytest tests/Fabrykazegarkow/Orders/GuestUser/ --env=prod --alluredir=allure_results
+
+Hodinkovna-CZ-orders:
+  extends: .pipeline-branch-model
+  stage: Hodinkovna-CZ
+  script:
+    - source venv/bin/activate
+    - pytest tests/HodinkovnaCZ/Orders/GuestUser/ --env=prod --alluredir=allure_results
+
+Hodinkovna-SK-orders:
+  extends: .pipeline-branch-model
+  stage: Hodinkovna-SK
+  script:
+    - source venv/bin/activate
+    - pytest tests/HodinkovnaSK/Orders/GuestUser/ --env=prod --alluredir=allure_results
+
+Eceasuri-orders:
+  extends: .pipeline-branch-model
+  stage: Eceasuri
+  script:
+    - source venv/bin/activate
+    - pytest tests/Eceasuri/Orders/GuestUser/ --env=prod --alluredir=allure_results
+
+Eorak-orders:
+  extends: .pipeline-branch-model
+  stage: Eorak
+  script:
+    - source venv/bin/activate
+    - pytest tests/Eorak/Orders/GuestUser/ --env=prod --alluredir=allure_results
 
 Submit-finished-report:
   extends: .pipeline-branch-model
@@ -57,6 +98,7 @@ Submit-finished-report:
     - date
     - apt-get update && apt-get install -y wget jq
   needs:
-    - Zegarownia-orders
+    - job: Zegarownia-orders
+      artifacts: true
   script:
     - ./allure-server/allure-push.sh ${CI_PIPELINE_ID}

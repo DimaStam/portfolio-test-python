@@ -24,6 +24,9 @@ class DeliveryMethods:
     fan_courier = "//tr[@class='method--CL_FANCOURIER_CL_FANCOURIER']//td[@class='col-method-input']"
     fan_courier_collect_point = "//tr[@class='method--CL_FANCOURIER_ROMANIA_POSTA_CL_FANCOURIER_ROMANIA_POSTA']//td[@class='col-method-input']"
 
+    magyar_posta = "//tr[@class='method--CL_MAGYAR_POSTA_CL_MAGYAR_POSTA']//td[@class='col-method-input']"
+    magyar_posta_csomagautomata = "//tr[@class='method--CL_MPL_HUNGARY_POSTA_CL_MPL_HUNGARY_POSTA']//td[@class='col-method-input']"
+    dpd = "//tr[@class='method--CL_DPD_CL_DPD']//td[@class='col-method-input']"
 
     def __init__(self, page: Page):
         self.page = page
