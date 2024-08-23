@@ -59,5 +59,5 @@ def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryP
 
 
 
-    # pytest -v --env=prod tests/HodinkovnaSK/Orders/GuestUser/sp_express_courier_all_payments_hod_sk_test.py --headed --alluredir=/Users/global/Desktop/Zegarownia/allure_results
-    # allure serve /Users/global/Desktop/Zegarownia/allure_results
+    # pytest -v --env=prod tests/HodinkovnaSK/Orders/GuestUser/sp_express_courier_all_payments_hod_sk_test.py --headed --alluredir=/Users/global/Desktop/Zegarownia/allure-results
+    # allure serve /Users/global/Desktop/Zegarownia/allure-results

@@ -66,4 +66,4 @@ def test_buy_product_by_blik(home_page, page: Page):
 
     # expect(page).to_have_title(PageTitles.PAYU_TITLE)
 
-    # pytest -v --env=prod tests/Fabrykazegarkow/Orders/GuestUser/individual_test/test_buy_product_by_courier_dhl_Blik.py --headed --alluredir=allure_results
+    # pytest -v --env=prod tests/Fabrykazegarkow/Orders/GuestUser/individual_test/test_buy_product_by_courier_dhl_Blik.py --headed --alluredir=allure-results

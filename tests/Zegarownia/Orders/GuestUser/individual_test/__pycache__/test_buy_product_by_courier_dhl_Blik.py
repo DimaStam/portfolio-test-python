@@ -16,25 +16,11 @@ from library.testdata.Orders.AllPaymentMethods import PaymentMethods
 from conftest import open_page
 from library.testdata.page_titles import PageTitles
 
-@pytest.fixture
-def home_page(page: Page, env):
-    pytest.skip()
-    home_page = HomePage(page)
-    open_page(page, env['URL_ZEG'])
-    home_page.wait_for_home_page()
-
-    # expect(page).to_have_title(PageTitles.ZEG_HOME_PAGE_TITLE)
-    return home_page
-
-def test_buy_product_by_blik(home_page, page: Page):
-    pytest.skip()
-    search_result_page: SearchResultPage = Header(home_page.page).find_product(ProductNames.product_name)
-
-    expect(search_result_page.product_tile).to_be_visible()
-
-    product_page: ProductPage = search_result_page.select_product()
-
-    expect(product_page.product_description_area).to_be_visible()
+def test_buy_product_by_blik(page: Page, env):
+    # pytest.skip()
+    open_page(page, env['URL_ZEG_PRODUCT'])
+    product_page = ProductPage(page)
+    expect(product_page.product_description_area).to_be_visible(timeout=20000)
 
     extraoptions_page: ExtraoptionsPage = product_page.add_product_to_the_cart()
 

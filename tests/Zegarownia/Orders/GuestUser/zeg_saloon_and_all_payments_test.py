@@ -59,5 +59,5 @@ def test_buy_product_with_payment_method(checkout_summary_page: CheckoutSummaryP
 
 
 
-    # pytest -v --env=prod tests\Zegarownia\Orders\GuestUser\ZegSaloon\test_buy_product_by_zeg_saloon_and_all_payments.py --headed --alluredir=/Users/global/Desktop/Zegarownia/allure_results
-    # allure serve /Users/global/Desktop/Zegarownia/allure_results
+    # pytest -v --env=prod tests\Zegarownia\Orders\GuestUser\ZegSaloon\test_buy_product_by_zeg_saloon_and_all_payments.py --headed --alluredir=/Users/global/Desktop/Zegarownia/allure-results
+    # allure serve /Users/global/Desktop/Zegarownia/allure-results

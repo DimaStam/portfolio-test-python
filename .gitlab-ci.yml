@@ -33,7 +33,7 @@ default:
     expire_in: 3 DAYS
     paths:
       - screenshots/
-      - /allure-results
+      - allure-results
 
 .pipeline-branch-model:
   rules:
@@ -47,7 +47,7 @@ default:
   extends: .pipeline-branch-model
   script:
     - source venv/bin/activate
-    - pytest --TestPath=$STORE_TEST_PATH --env=$ENVIRONMENT --alluredir=allure_results
+    - pytest $STORE_TEST_PATH --env=$ENVIRONMENT --alluredir=allure-results
 
 install-dependencies:
   stage: install
@@ -66,6 +66,12 @@ Fabryka-orders:
   stage: Fabryka
   variables:
     STORE_TEST_PATH: "tests/Fabrykazegarkow/Orders/GuestUser/"
+
+Watchard-orders:
+  extends: .pipeline-test
+  stage: Watchard
+  variables:
+    STORE_TEST_PATH: "tests/Watchard/Orders/GuestUser/"
 
 Hodinkovna-CZ-orders:
   extends: .pipeline-test
@@ -102,6 +108,7 @@ Submit-finished-report:
   dependencies:
     - Zegarownia-orders
     - Fabryka-orders
+    - Watchard-orders
     - Hodinkovna-CZ-orders
     - Hodinkovna-SK-orders
     - Eceasuri-orders
