@@ -65,31 +65,31 @@ Fabryka-orders:
   extends: .pipeline-test
   stage: Fabryka
   variables:
-    - STORE_TEST_PATH: "tests/Fabrykazegarkow/Orders/GuestUser/"
+    STORE_TEST_PATH: "tests/Fabrykazegarkow/Orders/GuestUser/"
 
 Hodinkovna-CZ-orders:
   extends: .pipeline-test
   stage: Hodinkovna-CZ
   variables:
-    - STORE_TEST_PATH: "tests/HodinkovnaCZ/Orders/GuestUser/"
+    STORE_TEST_PATH: "tests/HodinkovnaCZ/Orders/GuestUser/"
 
 Hodinkovna-SK-orders:
   extends: .pipeline-test
   stage: Hodinkovna-SK
   variables:
-    - STORE_TEST_PATH: "tests/HodinkovnaSK/Orders/GuestUser/"
+    STORE_TEST_PATH: "tests/HodinkovnaSK/Orders/GuestUser/"
 
 Eceasuri-orders:
   extends: .pipeline-test
   stage: Eceasuri
   variables:
-    - STORE_TEST_PATH: "tests/Eceasuri/Orders/GuestUser/"
+    STORE_TEST_PATH: "tests/Eceasuri/Orders/GuestUser/"
 
 Eorak-orders:
   extends: .pipeline-test
   stage: Eorak
   variables:
-    - STORE_TEST_PATH: "tests/Eorak/Orders/GuestUser/"
+    STORE_TEST_PATH: "tests/Eorak/Orders/GuestUser/"
 
 Submit-finished-report:
   stage: Send-report
