@@ -43,6 +43,12 @@ default:
       when: manual
   allow_failure: true
 
+.pipeline-test:
+  extends: .pipeline-branch-model
+  script:
+    - source venv/bin/activate
+    - pytest --TestPath=$STORE_TEST_PATH --env=$ENVIRONMENT --alluredir=allure_results
+
 install-dependencies:
   stage: install
   script:
@@ -50,55 +56,53 @@ install-dependencies:
     - playwright install
 
 Zegarownia-orders:
-  extends: .pipeline-branch-model
+  extends: .pipeline-test
   stage: Zegarownia
-  script:
-    - source venv/bin/activate
-    - pytest tests/Zegarownia/Orders/GuestUser/ --env=prod --alluredir=allure_results
+  variables:
+    STORE_TEST_PATH: "tests/Zegarownia/Orders/GuestUser/"
 
 Fabryka-orders:
-  extends: .pipeline-branch-model
+  extends: .pipeline-test
   stage: Fabryka
-  script:
-    - source venv/bin/activate
-    - pytest tests/Fabrykazegarkow/Orders/GuestUser/ --env=prod --alluredir=allure_results
+  variables:
+    - STORE_TEST_PATH: "tests/Fabrykazegarkow/Orders/GuestUser/"
 
 Hodinkovna-CZ-orders:
-  extends: .pipeline-branch-model
+  extends: .pipeline-test
   stage: Hodinkovna-CZ
-  script:
-    - source venv/bin/activate
-    - pytest tests/HodinkovnaCZ/Orders/GuestUser/ --env=prod --alluredir=allure_results
+  variables:
+    - STORE_TEST_PATH: "tests/HodinkovnaCZ/Orders/GuestUser/"
 
 Hodinkovna-SK-orders:
-  extends: .pipeline-branch-model
+  extends: .pipeline-test
   stage: Hodinkovna-SK
-  script:
-    - source venv/bin/activate
-    - pytest tests/HodinkovnaSK/Orders/GuestUser/ --env=prod --alluredir=allure_results
+  variables:
+    - STORE_TEST_PATH: "tests/HodinkovnaSK/Orders/GuestUser/"
 
 Eceasuri-orders:
-  extends: .pipeline-branch-model
+  extends: .pipeline-test
   stage: Eceasuri
-  script:
-    - source venv/bin/activate
-    - pytest tests/Eceasuri/Orders/GuestUser/ --env=prod --alluredir=allure_results
+  variables:
+    - STORE_TEST_PATH: "tests/Eceasuri/Orders/GuestUser/"
 
 Eorak-orders:
-  extends: .pipeline-branch-model
+  extends: .pipeline-test
   stage: Eorak
-  script:
-    - source venv/bin/activate
-    - pytest tests/Eorak/Orders/GuestUser/ --env=prod --alluredir=allure_results
+  variables:
+    - STORE_TEST_PATH: "tests/Eorak/Orders/GuestUser/"
 
 Submit-finished-report:
-  extends: .pipeline-branch-model
   stage: Send-report
   before_script:
     - date
     - apt-get update && apt-get install -y wget jq
-  needs:
-    - job: Zegarownia-orders
-      artifacts: true
   script:
-    - ./allure-server/allure-push.sh ${CI_PIPELINE_ID}
+    - chmod +x ./allure-server/allure-push.sh
+    - ./allure-server/allure-push.sh ${CI_PIPELINE_ID} 
+  dependencies:
+    - Zegarownia-orders
+    - Fabryka-orders
+    - Hodinkovna-CZ-orders
+    - Hodinkovna-SK-orders
+    - Eceasuri-orders
+    - Eorak-orders
