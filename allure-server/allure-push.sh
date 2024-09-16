@@ -23,7 +23,7 @@ done
 
 echo "send_slack_report: $send_slack_report"
 
-ALLURE_RESULTS_DIRECTORY='../target/allure-results'
+ALLURE_RESULTS_DIRECTORY='../allure-results'
 ALLURE_SERVER='https://superpharm-allure.g4n.eu'
 PROJECT_ID="$1"
 
