@@ -1,10 +1,19 @@
 import pytest
 import allure
 import os
+import time
+import logging
 from allure_commons.types import AttachmentType
 from playwright.sync_api import sync_playwright
 from dotenv import load_dotenv, find_dotenv
 from library.Services.CloseCookies import CloseCookies
+
+screenshots_dir = os.path.join(os.getcwd(), "screenshots")
+if not os.path.exists(screenshots_dir):
+    os.makedirs(screenshots_dir)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def pytest_addoption(parser):
     parser.addoption("--env", action="store", default="dev", help="Environment to run tests against")
@@ -13,6 +22,14 @@ def pytest_addoption(parser):
 def playwright():
     with sync_playwright() as p:
         yield p
+
+# @pytest.fixture(scope="session")
+# def browser(playwright, pytestconfig):
+#     headless = not pytestconfig.getoption("--headed")
+#     with allure.step(f"Launching browser {'in headless mode' if headless else 'with UI'}"):
+#         browser = playwright.chromium.launch(headless=headless)
+#     yield browser
+#     browser.close()
 
 @pytest.fixture(scope="session")
 def browser(playwright, pytestconfig):
@@ -25,50 +42,46 @@ def browser(playwright, pytestconfig):
 # @pytest.fixture
 # def page(browser, request):
 #     page = browser.new_page()
-#     failed_before = False
-#     try:
-#         yield page
-#     except Exception as e:
-#         # If an exception occurs, take a screenshot before closing the page
-#         failed_before = True
-#         with allure.step("Taking a screenshot on failure"):
-#             screenshot_bytes = page.screenshot(full_page=True)
-#             allure.attach(screenshot_bytes, name="screenshot", attachment_type=AttachmentType.PNG)
-#         raise  # Re-raise the exception to not mask the test failure
-#     finally:
-#         # If the test has failed and no exception was raised within the test, take a screenshot here
-#         if not failed_before:
-#             rep_call = getattr(request.node, "rep_call", None)
-#             if rep_call and rep_call.failed:
-#                 with allure.step("Taking a screenshot on failure"):
-#                     screenshot_bytes = page.screenshot(full_page=True)
-#                     allure.attach(screenshot_bytes, name="screenshot", attachment_type=AttachmentType.PNG)
-#         page.close()
+
+#     def take_screenshot_if_exception():
+#         # Check if the test has failed or is broken during the call or teardown phases
+#         for when in ('call', 'teardown'):
+#             rep = getattr(request.node, f"rep_{when}", None)
+#             if rep and (rep.failed or rep.outcome == "broken"):
+#                 # Call the take_screenshot function to capture and attach the screenshot
+#                 take_screenshot(page, request.node.nodeid)
+
+#     request.addfinalizer(take_screenshot_if_exception)
+
+#     yield page
+#     page.close()
 
 @pytest.fixture
-def page(browser, request):
+def page(browser):
     page = browser.new_page()
-    failed_before = False
-    try:
-        yield page
-    except Exception as e:
-        failed_before = True
-        take_screenshot(page, request.node.nodeid)
-        raise
-    finally:
-        if not failed_before:
-            rep_call = getattr(request.node, "rep_call", None)
-            if rep_call and rep_call.failed:
-                take_screenshot(page, request.node.nodeid)
-        page.close()
+    yield page
+    page.close()
 
-def take_screenshot(page, test_name):
-    filename = test_name.replace("/", "_").replace(":", "_").replace("[", "_").replace("]", "_") + ".png"
-    screenshot_path = f'screenshots/{filename}'
+# def take_screenshot(page, test_name):
+#     try:
+#         screenshots_dir = 'screenshots'
+#         if not os.path.exists(screenshots_dir):
+#             os.makedirs(screenshots_dir)
+#         filename = f"{test_name.replace('/', '_').replace(':', '_').replace('[', '_').replace(']', '_')}.png"
+#         screenshot_path = os.path.join(screenshots_dir, filename)
+#         page.screenshot(path=screenshot_path, full_page=True)
+#         logger.info(f"Screenshot saved to {screenshot_path}")
+#         with allure.step("Attaching screenshot on failure or broken test"):
+#             with open(screenshot_path, "rb") as image_file:
+#                 allure.attach(image_file.read(), name=f"screenshot_{test_name}", attachment_type=AttachmentType.PNG)
+#     except Exception as e:
+#         logger.error(f"Failed to take screenshot: {e}")
+
+def allure_attach_screenshot(page, test_name):
+    screenshot_path = os.path.join(screenshots_dir, f"{test_name}_{int(time.time() * 1000)}.png")
     page.screenshot(path=screenshot_path, full_page=True)
-    with allure.step("Taking a screenshot on failure"):
-        with open(screenshot_path, "rb") as image_file:
-            allure.attach(image_file.read(), name="screenshot", attachment_type=AttachmentType.PNG)
+    with open(screenshot_path, "rb") as image_file:
+        allure.attach(image_file.read(), name="screenshot", attachment_type=allure.attachment_type.PNG)
 
 @pytest.fixture(scope='session')
 def env(request):
@@ -88,16 +101,34 @@ def open_page(page, url):
         allure.attach(str(e), name='Navigation error', attachment_type=AttachmentType.TEXT)
         raise
 
+# @pytest.hookimpl(tryfirst=True, hookwrapper=True)
+# def pytest_runtest_makereport(item, call):
+#     outcome = yield
+#     report = outcome.get_result()
+
+#     if report.when == 'call' or report.when == 'teardown':
+#         setattr(item, f"rep_{report.when}", report)
+
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    # Execute all other hooks to obtain the report object
     outcome = yield
     report = outcome.get_result()
-
-    # Set a report attribute for each phase of a call, which can be "setup", "call", or "teardown"
-    if report.when == 'call':
+    if report.when == "call" or report.failed:
         setattr(item, "rep_call", report)
 
+@pytest.fixture(scope="function", autouse=True)
+def screenshot_on_failure(request, page):
+    yield
+    # Check if the test has failed or if rep_call is not set (which indicates an earlier failure)
+    if hasattr(request.node, "rep_call") and request.node.rep_call.failed:
+        # Make the screenshots directory if not exists
+        if not os.path.exists("screenshots"):
+            os.mkdir("screenshots")
+        # Take a screenshot of the current page
+        screenshot_path = os.path.join("screenshots", f"{request.node.name}.png")
+        page.screenshot(path=screenshot_path, full_page=True)
+        # Attach the screenshot to the Allure report
+        allure.attach.file(screenshot_path, name="screenshot", attachment_type=allure.attachment_type.PNG)
     
 
 

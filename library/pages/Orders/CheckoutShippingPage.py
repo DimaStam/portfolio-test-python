@@ -107,7 +107,7 @@ class CheckoutShippingPage:
     @allure.step("Select Fan Courier Collect Point")
     def select_fan_courier_collect_point(self):
         self.fan_courier_delivery_points.wait_for_fan_courier_collect_points_map()
-        self.fan_courier_delivery_points.enter_delivery_point("Strada Ferdinand nr. 38A, Râmnicu Vâlcea, România")
+        self.fan_courier_delivery_points.enter_delivery_point("Strada Valea Mare, Plenița, România")
 
     @allure.step("Select Magyar Csomagautomata delivery Point")
     def select_magyar_delivery_point(self):
