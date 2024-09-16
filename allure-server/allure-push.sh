@@ -36,7 +36,11 @@ curl -s --location --request POST "$ALLURE_SERVER/allure-docker-service/projects
   \"id\": \"$PROJECT_ID\"
 }"
 
+pwd | ls -lrt
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+echo $DIR
+ls -lrt $DIR
+ls -lrt $DIR/../
 # shellcheck disable=SC2010
 FILES_TO_SEND=$(ls -dp "$DIR"/$ALLURE_RESULTS_DIRECTORY/* | grep -v /$)
 if [ -z "$FILES_TO_SEND" ]; then
