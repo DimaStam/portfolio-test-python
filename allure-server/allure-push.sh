@@ -87,8 +87,8 @@ echo "----------------------REPORT URL-------------------------------"
 echo "Test report was pushed to Global4Net Allure Server!"
 #echo "Report url: $ALLURE_FINAL_REPORT"
 
-if [ "$send_slack_report" == "1" ]; then
-  SCRIPT_DIR="$(dirname "$0")"
-  echo $SCRIPT_DIR
-  bash "$SCRIPT_DIR"/slack-report.sh "$PROJECT_ID" "$ALLURE_REPORT"
-fi
+# if [ "$send_slack_report" == "1" ]; then
+#   SCRIPT_DIR="$(dirname "$0")"
+#   echo $SCRIPT_DIR
+#   bash "$SCRIPT_DIR"/slack-report.sh "$PROJECT_ID" "$ALLURE_REPORT"
+# fi
