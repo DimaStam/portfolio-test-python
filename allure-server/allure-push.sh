@@ -23,7 +23,7 @@ done
 
 echo "send_slack_report: $send_slack_report"
 
-ALLURE_RESULTS_DIRECTORY='../target/allure-results'
+ALLURE_RESULTS_DIRECTORY='../allure-results'
 ALLURE_SERVER='https://superpharm-allure.g4n.eu'
 PROJECT_ID="$1"
 
@@ -81,9 +81,11 @@ done
 
 ALLURE_REPORT=$(grep -o '"report_url":"[^"]*' <<< "$RESPONSE" | grep -o '[^"]*$')
 #ALLURE_FINAL_REPORT=$(echo "$ALLURE_REPORT" | sed -E 's/\/[0-9]+\//\/latest\//')
-
+echo "----------------------REPORT URL-------------------------------"
+echo "$ALLURE_REPORT"
+echo "----------------------REPORT URL-------------------------------"
 echo "Test report was pushed to Global4Net Allure Server!"
-echo "Report url: $ALLURE_FINAL_REPORT"
+#echo "Report url: $ALLURE_FINAL_REPORT"
 
 if [ "$send_slack_report" == "1" ]; then
   SCRIPT_DIR="$(dirname "$0")"
