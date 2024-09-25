@@ -95,7 +95,7 @@ def open_page(page, url):
     try:
         page.goto(url, timeout=60000)
         page.set_viewport_size({"width": 1700, "height": 900})
-        CloseCookies(page).close_cookies()
+        # CloseCookies(page).close_cookies()
     except Exception as e:
         print(f"Failed to navigate to the URL: {e}")
         allure.attach(str(e), name='Navigation error', attachment_type=AttachmentType.TEXT)
