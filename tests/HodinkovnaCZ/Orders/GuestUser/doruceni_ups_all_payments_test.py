@@ -1,10 +1,6 @@
 import pytest
 from playwright.sync_api import Page, expect
-from library.pages.common.HomePage import HomePage
-from library.pages.Orders.SearchResultPage import SearchResultPage
-from library.pages.common.Header import Header
 from library.pages.common.ProductPage import ProductPage
-
 from library.pages.Orders.ExtraoptionsPage import ExtraoptionsPage
 from library.pages.Orders.CheckoutCartPage import CheckoutCartPage
 from library.pages.Orders.StepLoginFormPage import StepLoginFormPage
@@ -17,20 +13,10 @@ from library.testdata.page_titles import PageTitles
 import time
 
 @pytest.fixture
-def home_page(page: Page, env):
-    home_page = HomePage(page)
-    open_page(page, env['URL_HOD_CZ'])
-    home_page.wait_for_home_page()
-
-    # expect(page).to_have_title(PageTitles.HOD_CZ_HOME_PAGE_TITLE)
-    return home_page
-
-@pytest.fixture
-def checkout_summary_page(home_page, page: Page):
-    search_result_page: SearchResultPage = Header(home_page.page).find_product(ProductNames.product_name)
-    expect(search_result_page.product_tile).to_be_visible(timeout=20000)
-
-    product_page: ProductPage = search_result_page.select_product()
+def checkout_summary_page(page: Page, env):
+    
+    open_page(page, env['URL_HOD_CZ_PRODUCT'])
+    product_page = ProductPage(page)
     expect(product_page.product_description_area).to_be_visible(timeout=20000)
 
     extraoptions_page: ExtraoptionsPage = product_page.add_product_to_the_cart()

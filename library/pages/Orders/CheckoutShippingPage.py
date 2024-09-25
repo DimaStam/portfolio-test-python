@@ -48,8 +48,7 @@ class CheckoutShippingPage:
 
     @allure.step("Fill shipping form")
     def fill_shipping_form(self, data: ShippingForm = None):
-        if data is None:
-            data = self.default_data
+        data = data or self.default_data
         self.page.wait_for_load_state('networkidle')
         # self.page.wait_for_load_state("domcontentloaded")
         # self.page.expect_response(lambda response: "totals-information" in response.url and response.status == 200)
