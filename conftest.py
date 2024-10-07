@@ -12,9 +12,6 @@ screenshots_dir = os.path.join(os.getcwd(), "screenshots")
 if not os.path.exists(screenshots_dir):
     os.makedirs(screenshots_dir)
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 def pytest_addoption(parser):
     parser.addoption("--env", action="store", default="dev", help="Environment to run tests against")
 
@@ -22,14 +19,6 @@ def pytest_addoption(parser):
 def playwright():
     with sync_playwright() as p:
         yield p
-
-# @pytest.fixture(scope="session")
-# def browser(playwright, pytestconfig):
-#     headless = not pytestconfig.getoption("--headed")
-#     with allure.step(f"Launching browser {'in headless mode' if headless else 'with UI'}"):
-#         browser = playwright.chromium.launch(headless=headless)
-#     yield browser
-#     browser.close()
 
 @pytest.fixture(scope="session")
 def browser(playwright, pytestconfig):
@@ -39,43 +28,11 @@ def browser(playwright, pytestconfig):
     yield browser
     browser.close()
 
-# @pytest.fixture
-# def page(browser, request):
-#     page = browser.new_page()
-
-#     def take_screenshot_if_exception():
-#         # Check if the test has failed or is broken during the call or teardown phases
-#         for when in ('call', 'teardown'):
-#             rep = getattr(request.node, f"rep_{when}", None)
-#             if rep and (rep.failed or rep.outcome == "broken"):
-#                 # Call the take_screenshot function to capture and attach the screenshot
-#                 take_screenshot(page, request.node.nodeid)
-
-#     request.addfinalizer(take_screenshot_if_exception)
-
-#     yield page
-#     page.close()
-
 @pytest.fixture
 def page(browser):
     page = browser.new_page()
     yield page
     page.close()
-
-# def take_screenshot(page, test_name):
-#     try:
-#         screenshots_dir = 'screenshots'
-#         if not os.path.exists(screenshots_dir):
-#             os.makedirs(screenshots_dir)
-#         filename = f"{test_name.replace('/', '_').replace(':', '_').replace('[', '_').replace(']', '_')}.png"
-#         screenshot_path = os.path.join(screenshots_dir, filename)
-#         page.screenshot(path=screenshot_path, full_page=True)
-#         logger.info(f"Screenshot saved to {screenshot_path}")
-#         with allure.step("Attaching screenshot on failure or broken test"):
-#             with open(screenshot_path, "rb") as image_file:
-#                 allure.attach(image_file.read(), name=f"screenshot_{test_name}", attachment_type=AttachmentType.PNG)
-#     except Exception as e:
-#         logger.error(f"Failed to take screenshot: {e}")
 
 def allure_attach_screenshot(page, test_name):
     screenshot_path = os.path.join(screenshots_dir, f"{test_name}_{int(time.time() * 1000)}.png")
@@ -95,19 +52,12 @@ def open_page(page, url):
     try:
         page.goto(url, timeout=60000)
         page.set_viewport_size({"width": 1700, "height": 900})
-        # CloseCookies(page).close_cookies()
+        if os.getenv('--env') == 'prod':
+            CloseCookies(page).close_cookies()
     except Exception as e:
         print(f"Failed to navigate to the URL: {e}")
         allure.attach(str(e), name='Navigation error', attachment_type=AttachmentType.TEXT)
         raise
-
-# @pytest.hookimpl(tryfirst=True, hookwrapper=True)
-# def pytest_runtest_makereport(item, call):
-#     outcome = yield
-#     report = outcome.get_result()
-
-#     if report.when == 'call' or report.when == 'teardown':
-#         setattr(item, f"rep_{report.when}", report)
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
