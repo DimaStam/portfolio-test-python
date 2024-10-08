@@ -26,7 +26,7 @@ class ZegarowniaPaymentMethods:
         PAYPO: "//div[@class='tr payment-method payu-payment paypo']",
         TWISTO: "//div[@class='tr payment-method payu-payment twisto']",
         CA_INSTALLMENTS: "//div[@class='tr ca']",
-        CARD: "//div[@class='payment-method payu-payment']//label[@for='payu_gateway_card']",
+        CARD: "//div[@class='payment-method-title field choice']//label[@for='payu_gateway_card']",
         PAY_PAL: "//div[@class='tr']//label[@for='paypal_express']",
     }
 

@@ -11,7 +11,7 @@ class PaymentMethods:
     paypo = "//div[@class='tr payment-method payu-payment paypo']"
     twisto = "//div[@class='tr payment-method payu-payment twisto']"
     ca_installments = "//div[@class='tr ca']"
-    card = "//div[@class='payment-method payu-payment']//label[@for='payu_gateway_card']"
+    card = "//div[@class='payment-method-title field choice']//label[@for='payu_gateway_card']"
     pay_pal = "//div[@class='tr']//label[@for='paypal_express']"
 
     eorak_card = "//div[@class='payment-method payu-payment _active']//label[@for='payu_gateway_card']"
