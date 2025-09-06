@@ -1,12 +1,7 @@
 stages:
   - install
-  - Zegarownia
-  - Fabryka
-  - Watchard
-  - Hodinkovna-CZ
-  - Hodinkovna-SK
-  - Eceasuri
-  - Eorak
+  - Store-1
+  - Store-2
   - Send-report
 
 variables:
@@ -27,7 +22,7 @@ before_script:
 default:
   image: mcr.microsoft.com/playwright/python:v1.44.0-jammy
   tags:
-    - superpharm
+    - runner
   artifacts:
     when: always
     expire_in: 3 DAYS
@@ -55,47 +50,41 @@ install-dependencies:
     - pip install pytest playwright
     - playwright install
 
-Zegarownia-orders:
+Store-1-orders:
   extends: .pipeline-test
-  stage: Zegarownia
+  stage: Store-1
   variables:
-    STORE_TEST_PATH: "tests/Zegarownia/Orders/GuestUser/"
+    STORE_TEST_PATH: "tests/Store1/Orders/GuestUser/"
 
-Fabryka-orders:
+Store-1-login:
   extends: .pipeline-test
-  stage: Fabryka
+  stage: Store-1
   variables:
-    STORE_TEST_PATH: "tests/Fabrykazegarkow/Orders/GuestUser/"
+    STORE_TEST_PATH: "tests/Store1/User/Login"
 
-Watchard-orders:
+Store-1-sign-in:
   extends: .pipeline-test
-  stage: Watchard
+  stage: Store-1
   variables:
-    STORE_TEST_PATH: "tests/Watchard/Orders/GuestUser/"
+    STORE_TEST_PATH: "tests/Store1/User/SignIn"
 
-Hodinkovna-CZ-orders:
+Store-2-orders:
   extends: .pipeline-test
-  stage: Hodinkovna-CZ
+  stage: Store-2
   variables:
-    STORE_TEST_PATH: "tests/HodinkovnaCZ/Orders/GuestUser/"
+    STORE_TEST_PATH: "tests/Store2/Orders/GuestUser/"
 
-Hodinkovna-SK-orders:
+Store-2-login:
   extends: .pipeline-test
-  stage: Hodinkovna-SK
+  stage: Store-2
   variables:
-    STORE_TEST_PATH: "tests/HodinkovnaSK/Orders/GuestUser/"
+    STORE_TEST_PATH: "tests/Store2/User"
 
-Eceasuri-orders:
+Store-2-sign-in:
   extends: .pipeline-test
-  stage: Eceasuri
+  stage: Store-2
   variables:
-    STORE_TEST_PATH: "tests/Eceasuri/Orders/GuestUser/"
-
-Eorak-orders:
-  extends: .pipeline-test
-  stage: Eorak
-  variables:
-    STORE_TEST_PATH: "tests/Eorak/Orders/GuestUser/"
+    STORE_TEST_PATH: "tests/Store2/User/SignIn"
 
 Submit-finished-report:
   stage: Send-report
@@ -106,10 +95,10 @@ Submit-finished-report:
     - chmod +x ./allure-server/allure-push.sh
     - ./allure-server/allure-push.sh ${CI_PIPELINE_ID} 
   dependencies:
-    - Zegarownia-orders
-    - Fabryka-orders
-    - Watchard-orders
-    - Hodinkovna-CZ-orders
-    - Hodinkovna-SK-orders
-    - Eceasuri-orders
-    - Eorak-orders
+    - Store-1-orders
+    - Store-1-login
+    - Store-1-sign-in
+    - Store-2-orders
+    - Store-2-login
+    - Store-2-sign-in
+

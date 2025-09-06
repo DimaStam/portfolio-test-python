@@ -1,7 +1,8 @@
 from playwright.sync_api import Page
 import allure
 import time
-from library.pages.Orders.SearchResultPage import SearchResultPage
+from library.pages.orders.search_result_page import SearchResultPage
+
 
 class Header:
     def __init__(self, page: Page):

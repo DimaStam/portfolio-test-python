@@ -1,0 +1,26 @@
+# Normalize line endings and avoid CRLF warnings
+
+# Default: keep LF in the repository for all text files
+* text=auto eol=lf
+
+# Explicit LF for common text formats
+*.py    text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.md    text eol=lf
+*.env*  text eol=lf
+*.ini   text eol=lf
+*.sh    text eol=lf
+
+# Windows scripts keep CRLF in working tree
+*.ps1   text eol=crlf
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# Binary files
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.pdf   binary
+*.zip   binary

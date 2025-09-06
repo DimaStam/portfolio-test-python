@@ -1,1 +1,5 @@
 allure-results
+venv/
+.env.prod
+.env.stage
+__pycache__/
