@@ -114,6 +114,3 @@ STORE_1_PASSWORD=<password>
 HEADLESS=true
 ```
 Note: keys are based on current usage (e.g., `URL_STORE_1_PRODUCT`, `STORE_1_USERNAME`, `STORE_1_PASSWORD`). Adjust to your environment specifics.
-
----
-If helpful, we can also add a `.env.example` with a complete list of keys.
